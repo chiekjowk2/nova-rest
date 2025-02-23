@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Toaster} from "sonner";
 
 export const metadata = {
   title: "Sleep App",
@@ -10,6 +11,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className="bg-[#242933]">
         {children}
+        <Toaster richColors="true" position="top-right"/>
       </body>
     </html>
   );
