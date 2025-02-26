@@ -1,53 +1,45 @@
 "use client";
-
+import { useRouter , useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-export default function ResultsPage() {
+const ResultPage = () => {
   const router = useRouter();
-  const [sleepScore, setSleepScore] = useState(0);
-  const [recommendations, setRecommendations] = useState([]);
+  const SearchParams = useSearchParams();
+  const score = SearchParams.get("score") || 0;
 
-  // Simulate fetching sleep score & recommendations based on user's answers
-  useEffect(() => {
-    const userScore = 75; // Example: Fetch this from state or API
-    const advice = [
-      "Reduce screen time 1 hour before bed.",
-      "Try to sleep at the same time daily.",
-      "Avoid caffeine after 4 PM."
-    ];
+  const getAdvice = (score) => {
+    if (score >= 7) {
+      return "Great! Your sleep quality seems good. Keep up the healthy sleep habits!";
+    }
+    if (score >= 4) {
+      return "Your sleep could be improved. Try maintaining a consistent schedule and reducing screen time before bed.";
+    }
+    return "Your sleep quality is poor. Consider seeking professional advice or improving your sleep hygiene.";
+  };
 
-    setSleepScore(userScore);
-    setRecommendations(advice);
-  }, []);
+  if (score === null) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#242933] p-6">
-      <div className="bg-white shadow-lg rounded-2xl p-6 max-w-lg w-full text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Your Sleep Report</h1>
-
-        <div className="mt-4 p-4 bg-blue-100 rounded-xl">
-          <p className="text-lg font-semibold">
-            Sleep Score: <span className="text-blue-600">{sleepScore}%</span>
-          </p>
-        </div>
-
-        <h2 className="text-lg font-medium mt-6">Recommendations:</h2>
-        <ul className="text-gray-700 mt-2 space-y-2">
-          {recommendations.map((tip, index) => (
-            <li key={index} className="bg-gray-200 p-3 rounded-lg">
-              {tip}
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition"
-          onClick={() => router.push("/sleep-plan")}
-        >
-          Get Your Sleep Plan
-        </button>
+    <div className="flex justify-center flex-col items-center mx-auto mt-24">
+      <h1 className="text-3xl font-bold text-[#A6ADBA]">
+        Your Sleep Quality Result
+      </h1>
+      <div className="bg-[#2a303c] w-[576px] h-[430px] max-w-4xl mx-auto mt-8 rounded-2xl flex flex-col justify-center items-center">
+        <h2 className="text-4xl font-semibold text-white mt-4">
+          Your Score: {score}
+        </h2>
+        <p className="text-xl text-[#A6ADBA] mt-4 px-4">{getAdvice(score)}</p>
       </div>
+      <button
+        className="bg-[#05B462] text-white rounded-full py-4 mt-8 w-[576px] font-semibold hover:bg-[#05b43feb]"
+        onClick={() => router.push("/")} 
+      >
+        Take the Quiz Again
+      </button>
     </div>
   );
-}
+};
+
+export default ResultPage;
